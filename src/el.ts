@@ -10,3 +10,18 @@ export const el = (name: string, { children, ...attr }: Attr = {}) => {
 
     return elem
 }
+
+export const $ = new Proxy(
+    {} as Record<
+        string,
+        (attr: Attr) => HTMLElement
+    >,
+    {
+        get(_target, prop, _receiver) {
+            if (typeof prop == "string") {
+                return (attr: Attr) => el(prop, attr)
+            }
+            return true
+        }
+    }
+)
